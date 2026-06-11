@@ -29,7 +29,7 @@ function Home() {
     setOpen(true);
   };
 
-  const handleDiagnoseSearch = () => {
+  const handleDiagnoseSearchSearch = () => {
     const match =
       campaigns.find((c) => c.id === query.trim()) ||
       campaigns.find((c) => c.name.toLowerCase().includes(query.trim().toLowerCase()));
@@ -87,12 +87,12 @@ function Home() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleDiagnose()}
+                  onKeyDown={(e) => e.key === "Enter" && handleDiagnoseSearch()}
                   placeholder="Search any campaign by name or ID — e.g. Cool-O-Mat"
                   className="flex-1 bg-transparent px-2 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
                 <button
-                  onClick={handleDiagnose}
+                  onClick={handleDiagnoseSearch}
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_oklch(0.32_0.07_160/0.7)] transition hover:opacity-95"
                 >
                   <Sparkles className="h-4 w-4" />
@@ -121,7 +121,7 @@ function Home() {
 
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
               {campaigns.map((c, i) => (
-                <CampaignCard key={c.id} campaign={c} index={i} />
+                <CampaignCard key={c.id} campaign={c} index={i} onClick={openModal} />
               ))}
             </div>
 
