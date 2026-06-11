@@ -85,7 +85,7 @@ function Detail() {
           className="relative mt-6 overflow-hidden rounded-3xl border border-border p-10"
           style={{
             background:
-              "linear-gradient(135deg, oklch(0.96 0.018 90) 0%, oklch(0.97 0.012 160) 100%)",
+              "linear-gradient(135deg, oklch(0.96 0.01 255) 0%, oklch(0.97 0.008 255) 100%)",
           }}
         >
           <div className="flex items-start gap-6">
@@ -316,21 +316,21 @@ function Detail() {
 
 function ConfidenceRow({ label, filled }) {
   return (
-    <div className="flex items-center gap-3 text-[13px]">
-      <span className="text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <span
-            key={i}
-            className="h-2.5 w-2.5 rounded-[3px]"
-            style={{ background: i < filled ? "oklch(0.32 0.07 160)" : "oklch(0.88 0.012 90)" }}
-          />
-        ))}
+      <div className="flex items-center gap-3 text-[13px]">
+        <span className="text-muted-foreground">{label}</span>
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <span
+              key={i}
+              className="h-2.5 w-2.5 rounded-[3px]"
+              style={{ background: i < filled ? "oklch(0.28 0.06 255)" : "oklch(0.88 0.01 255)" }}
+            />
+          ))}
+        </div>
+        <span className="font-semibold text-foreground">{filled}/5</span>
       </div>
-      <span className="font-semibold text-foreground">{filled}/5</span>
-    </div>
-  );
-}
+    );
+  }
 
 function ReasoningBlock({ title, children }) {
   return (
@@ -350,7 +350,7 @@ function Chips({ chips }) {
         <span
           key={c}
           className="rounded-md bg-primary/8 px-2.5 py-1 text-[12px] font-medium text-primary"
-          style={{ background: "oklch(0.32 0.07 160 / 0.08)" }}
+          style={{ background: "oklch(0.28 0.06 255 / 0.08)" }}
         >
           {c}
         </span>
@@ -360,8 +360,8 @@ function Chips({ chips }) {
 }
 
 function MetricTile({ label, value, vs, tone }) {
-  const bg = tone === "warn" ? "oklch(0.96 0.05 70)" : "oklch(0.95 0.04 160)";
-  const border = tone === "warn" ? "oklch(0.85 0.06 70)" : "oklch(0.82 0.06 160)";
+  const bg = tone === "warn" ? "oklch(0.96 0.05 70)" : "oklch(0.95 0.04 255)";
+  const border = tone === "warn" ? "oklch(0.85 0.06 70)" : "oklch(0.82 0.06 255)";
   return (
     <div
       className="rounded-xl border p-4"

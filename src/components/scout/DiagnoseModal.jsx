@@ -41,7 +41,7 @@ export function DiagnoseModal({ open, onClose, onSubmit, campaignName = "" }) {
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
                   style={{
                     background:
-                      "linear-gradient(135deg, oklch(0.42 0.1 160) 0%, oklch(0.28 0.07 160) 100%)",
+                      "linear-gradient(135deg, oklch(0.40 0.08 255) 0%, oklch(0.24 0.05 255) 100%)",
                   }}
                 >
                   <Sparkles className="h-5 w-5 text-white" strokeWidth={1.75} />
@@ -99,7 +99,7 @@ export function DiagnoseModal({ open, onClose, onSubmit, campaignName = "" }) {
                 </button>
                 <button
                   onClick={() => onSubmit?.(note)}
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_oklch(0.32_0.07_160/0.7)] transition hover:opacity-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_oklch(0.28_0.06_255/0.7)] transition hover:opacity-95"
                 >
                   <Sparkles className="h-4 w-4" strokeWidth={2} />
                   Diagnose now
