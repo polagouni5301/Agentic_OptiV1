@@ -6,8 +6,8 @@ export function ScoutMark({ size = 40 }) {
         width: size,
         height: size,
         background:
-          "linear-gradient(135deg, oklch(0.42 0.1 160) 0%, oklch(0.28 0.07 160) 100%)",
-        boxShadow: "0 8px 24px -10px oklch(0.32 0.07 160 / 0.5)",
+          "linear-gradient(135deg, oklch(0.40 0.08 255) 0%, oklch(0.24 0.05 255) 100%)",
+        boxShadow: "0 8px 24px -10px oklch(0.28 0.06 255 / 0.5)",
       }}
     >
       <svg viewBox="0 0 24 24" width={size * 0.5} height={size * 0.5} fill="none">
@@ -26,7 +26,7 @@ export function LocaliQLogo() {
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path
           d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z"
-          fill="oklch(0.32 0.07 160)"
+          fill="oklch(0.28 0.06 255)"
         />
       </svg>
       <span className="font-display text-[22px] font-semibold tracking-tight text-foreground">

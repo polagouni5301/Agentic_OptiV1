@@ -56,7 +56,7 @@ function Home() {
           className="relative overflow-hidden rounded-3xl border border-border p-10"
           style={{
             background:
-              "linear-gradient(135deg, oklch(0.96 0.018 90) 0%, oklch(0.97 0.012 160) 100%)",
+              "linear-gradient(135deg, oklch(0.96 0.01 255) 0%, oklch(0.97 0.008 255) 100%)",
           }}
         >
           <div
@@ -64,7 +64,7 @@ function Home() {
             className="pointer-events-none absolute -right-20 -top-24 h-[340px] w-[340px] rounded-full opacity-30"
             style={{
               background:
-                "radial-gradient(closest-side, oklch(0.42 0.1 160 / 0.35), transparent)",
+                "radial-gradient(closest-side, oklch(0.40 0.08 255 / 0.35), transparent)",
             }}
           />
           <div className="relative flex items-start gap-6">
