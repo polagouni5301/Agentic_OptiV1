@@ -11,17 +11,19 @@ import {
   ShieldCheck,
   Loader2,
   AlertCircle,
+  Quote,
 } from "lucide-react";
 import { LocaliQLogo, ScoutMark } from "../components/scout/Logo";
+import heroArt from "../assets/hero-aci.jpg";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign in — Agentic Campaign Intelligence" },
+      { title: "Sign in — Scout · Agentic Campaign Intelligence" },
       {
         name: "description",
         content:
-          "Sign in to LocaliQ Agentic Campaign Intelligence — AI-powered campaign diagnostics for paid search.",
+          "Sign in to Scout — the agentic analyst for paid search teams. Diagnose any campaign in under a minute.",
       },
     ],
   }),
@@ -48,98 +50,75 @@ function LoginPage() {
     setTimeout(() => {
       setLoading(false);
       navigate({ to: "/" });
-    }, 900);
+    }, 800);
   };
 
   return (
     <div className="h-screen overflow-hidden bg-background text-foreground">
-      <div className="grid h-full grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-        {/* LEFT: Branding */}
-        <section
-          className="relative hidden overflow-hidden p-10 lg:flex lg:flex-col lg:justify-between"
-          style={{
-            background:
-              "linear-gradient(135deg, oklch(0.52 0.19 28) 0%, oklch(0.62 0.2 35) 55%, oklch(0.68 0.2 55) 100%)",
-          }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[460px] w-[460px] rounded-full opacity-30"
-            style={{
-              background: "radial-gradient(closest-side, white, transparent)",
-            }}
+      <div className="grid h-full grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
+        {/* LEFT: Editorial branding */}
+        <section className="relative hidden h-full overflow-hidden lg:block">
+          <img
+            src={heroArt}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-0 h-[380px] w-[380px] rounded-full opacity-25"
+            className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(closest-side, oklch(0.95 0.12 80), transparent)",
+                "linear-gradient(135deg, oklch(0.32 0.14 22 / 0.92) 0%, oklch(0.42 0.18 28 / 0.82) 55%, oklch(0.55 0.2 38 / 0.75) 100%)",
             }}
           />
-
-          <div className="relative flex items-center gap-2">
-            <ScoutMark size={36} />
-            <span className="font-display text-[20px] font-semibold tracking-tight text-white">
-              LocaliQ
-            </span>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative max-w-md"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">
-              <Sparkles className="h-3 w-3" /> Agentic Campaign Intelligence
+          <div className="relative flex h-full flex-col justify-between p-10 text-white">
+            <div className="flex items-center gap-2">
+              <ScoutMark size={32} />
+              <span className="font-display text-[18px] font-semibold tracking-tight">
+                LocaliQ <span className="text-white/60">/ Scout</span>
+              </span>
             </div>
-            <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-white">
-              AI-powered campaign diagnostics for smarter decisions.
-            </h1>
-            <p className="mt-4 text-[15px] leading-relaxed text-white/85">
-              Sign in to diagnose paid search campaigns in seconds, with
-              evidence-backed recommendations and human-in-the-loop guardrails.
-            </p>
 
-            {/* Mini dashboard preview */}
-            <div className="mt-8 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-              <div className="flex items-center justify-between text-[11px] text-white/80">
-                <span className="font-semibold tracking-wider">ROOT CAUSE</span>
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold">
-                  92% confidence
-                </span>
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-md"
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] backdrop-blur">
+                <Sparkles className="h-3 w-3" /> Agentic intelligence
               </div>
-              <div className="mt-2 text-[14px] font-semibold text-white">
-                Negative keyword conflict capping impression share
-              </div>
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
-                <div className="h-full w-[92%] rounded-full bg-white" />
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] text-white/80">
-                {[
-                  { l: "CPL", v: "$42.18" },
-                  { l: "CVR", v: "3.4%" },
-                  { l: "Pacing", v: "73%" },
-                ].map((m) => (
-                  <div key={m.l} className="rounded-lg bg-white/10 p-2">
-                    <div className="tracking-wider">{m.l}</div>
-                    <div className="font-display text-[14px] font-semibold text-white">
-                      {m.v}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.02] tracking-tight">
+                Walk in with a question.
+                <br />
+                <span className="text-white/70">Walk out with an answer.</span>
+              </h1>
+              <p className="mt-5 text-[14px] leading-relaxed text-white/80">
+                Scout assembles the context, reasons through the anomaly, and brings
+                you a recommendation you can actually ship — all before your next
+                meeting starts.
+              </p>
+
+              <figure className="mt-7 rounded-2xl border border-white/15 bg-white/[0.08] p-5 backdrop-blur-md">
+                <Quote className="h-4 w-4 text-white/60" />
+                <blockquote className="mt-2 text-[13px] leading-relaxed text-white/90">
+                  "It does in 40 seconds what used to take my team 40 minutes —
+                  and the recommendation is sourced. We've stopped guessing."
+                </blockquote>
+                <figcaption className="mt-3 flex items-center gap-2 text-[11px] uppercase tracking-widest text-white/55">
+                  <span className="h-px w-6 bg-white/30" /> Head of Performance · LocaliQ
+                </figcaption>
+              </figure>
+            </motion.div>
+
+            <div className="flex items-center gap-2 text-[11px] text-white/65">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              SOC 2 · VPC-SC · CMEK — human-in-the-loop by default.
             </div>
-          </motion.div>
-
-          <div className="relative flex items-center gap-2 text-[12px] text-white/75">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            Secure, human-in-the-loop campaign intelligence platform.
           </div>
         </section>
 
-        {/* RIGHT: Form */}
+        {/* RIGHT: form */}
         <section className="flex h-full flex-col overflow-hidden">
           <header className="flex items-center justify-between px-6 py-4 lg:hidden">
             <LocaliQLogo />
@@ -157,7 +136,7 @@ function LoginPage() {
                   Welcome back
                 </h2>
                 <p className="mt-1.5 text-[13px] text-muted-foreground">
-                  Sign in to your workspace to continue diagnosing campaigns.
+                  Sign in to your workspace to keep diagnosing campaigns.
                 </p>
 
                 <form onSubmit={submit} className="mt-5 space-y-3.5">
@@ -169,10 +148,7 @@ function LoginPage() {
                   )}
 
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="text-[12px] font-medium text-foreground"
-                    >
+                    <label htmlFor="email" className="text-[12px] font-medium text-foreground">
                       Work email
                     </label>
                     <div className="relative mt-1.5">
@@ -191,16 +167,10 @@ function LoginPage() {
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="password"
-                        className="text-[12px] font-medium text-foreground"
-                      >
+                      <label htmlFor="password" className="text-[12px] font-medium text-foreground">
                         Password
                       </label>
-                      <a
-                        href="#"
-                        className="text-[12px] font-medium text-primary hover:underline"
-                      >
+                      <a href="#" className="text-[12px] font-medium text-primary hover:underline">
                         Forgot password?
                       </a>
                     </div>
@@ -247,7 +217,7 @@ function LoginPage() {
                       </>
                     ) : (
                       <>
-                        Sign In <ArrowRight className="h-4 w-4" />
+                        Sign in <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </button>
@@ -255,10 +225,10 @@ function LoginPage() {
               </div>
 
               <p className="mt-4 text-center text-[13px] text-muted-foreground">
-                New to LocaliQ?{" "}
-                <a href="#" className="font-semibold text-primary hover:underline">
-                  Request Access
-                </a>
+                New to Scout?{" "}
+                <Link to="/landing" className="font-semibold text-primary hover:underline">
+                  Request access
+                </Link>
               </p>
             </motion.div>
           </div>
