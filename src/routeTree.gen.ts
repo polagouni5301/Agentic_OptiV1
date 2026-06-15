@@ -10,79 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LandingRouteImport } from './routes/landing'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DiagnoseIdRouteImport } from './routes/diagnose.$id'
-import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LandingRoute = LandingRouteImport.update({
-  id: '/landing',
-  path: '/landing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiagnoseIdRoute = DiagnoseIdRouteImport.update({
-  id: '/diagnose/$id',
-  path: '/diagnose/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CampaignIdRoute = CampaignIdRouteImport.update({
-  id: '/campaign/$id',
-  path: '/campaign/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/campaign/$id': typeof CampaignIdRoute
-  '/diagnose/$id': typeof DiagnoseIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/campaign/$id': typeof CampaignIdRoute
-  '/diagnose/$id': typeof DiagnoseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/campaign/$id': typeof CampaignIdRoute
-  '/diagnose/$id': typeof DiagnoseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/landing' | '/login' | '/campaign/$id' | '/diagnose/$id'
+  fullPaths: '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/landing' | '/login' | '/campaign/$id' | '/diagnose/$id'
-  id:
-    | '__root__'
-    | '/'
-    | '/landing'
-    | '/login'
-    | '/campaign/$id'
-    | '/diagnose/$id'
+  to: '/login'
+  id: '__root__' | '/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
-  CampaignIdRoute: typeof CampaignIdRoute
-  DiagnoseIdRoute: typeof DiagnoseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -94,43 +48,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/landing': {
-      id: '/landing'
-      path: '/landing'
-      fullPath: '/landing'
-      preLoaderRoute: typeof LandingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diagnose/$id': {
-      id: '/diagnose/$id'
-      path: '/diagnose/$id'
-      fullPath: '/diagnose/$id'
-      preLoaderRoute: typeof DiagnoseIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/campaign/$id': {
-      id: '/campaign/$id'
-      path: '/campaign/$id'
-      fullPath: '/campaign/$id'
-      preLoaderRoute: typeof CampaignIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
-  CampaignIdRoute: CampaignIdRoute,
-  DiagnoseIdRoute: DiagnoseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
