@@ -63,8 +63,74 @@ function Diagnosing() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="relative grid h-[280px] w-[280px] place-items-center"
         >
-          <ScoutIconMark size={200} />
+          {/* Orbiting halo */}
+          <svg
+            aria-hidden
+            viewBox="0 0 280 280"
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          >
+            <defs>
+              <radialGradient id="scoutGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="oklch(0.72 0.18 45)" stopOpacity="0.35" />
+                <stop offset="70%" stopColor="oklch(0.72 0.18 45)" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="scoutArc" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="oklch(0.52 0.19 28)" stopOpacity="0" />
+                <stop offset="60%" stopColor="oklch(0.62 0.2 38)" stopOpacity="1" />
+                <stop offset="100%" stopColor="oklch(0.78 0.18 55)" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            <circle cx="140" cy="140" r="135" fill="url(#scoutGlow)" />
+            {/* Static thin rings */}
+            <circle cx="140" cy="140" r="118" fill="none" stroke="oklch(0.55 0.12 35 / 0.18)" strokeWidth="1" strokeDasharray="2 6" />
+            <circle cx="140" cy="140" r="98" fill="none" stroke="oklch(0.55 0.12 35 / 0.12)" strokeWidth="1" />
+            {/* Rotating arc - outer */}
+            <motion.g
+              animate={{ rotate: 360 }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+              style={{ transformOrigin: "140px 140px" }}
+            >
+              <path
+                d="M 140 22 A 118 118 0 0 1 258 140"
+                fill="none"
+                stroke="url(#scoutArc)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="258" cy="140" r="4" fill="oklch(0.78 0.18 55)" />
+            </motion.g>
+            {/* Rotating arc - inner reverse */}
+            <motion.g
+              animate={{ rotate: -360 }}
+              transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+              style={{ transformOrigin: "140px 140px" }}
+            >
+              <path
+                d="M 140 42 A 98 98 0 0 0 42 140"
+                fill="none"
+                stroke="oklch(0.62 0.2 38 / 0.55)"
+                strokeWidth="1.5"
+                strokeDasharray="4 4"
+              />
+              <circle cx="42" cy="140" r="3" fill="oklch(0.62 0.2 38)" />
+            </motion.g>
+            {/* Pulsing scan ring */}
+            <motion.circle
+              cx="140"
+              cy="140"
+              r="80"
+              fill="none"
+              stroke="oklch(0.78 0.18 55)"
+              strokeWidth="1.5"
+              animate={{ r: [80, 130, 80], opacity: [0.55, 0, 0.55] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+            />
+          </svg>
+          <div className="relative">
+            <ScoutIconMark size={200} />
+          </div>
         </motion.div>
 
         <motion.h1
