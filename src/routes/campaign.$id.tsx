@@ -261,6 +261,32 @@ function Detail() {
   const [open, setOpen] = useState(false);
   const [evidenceOpen, setEvidenceOpen] = useState(true);
   const [applied, setApplied] = useState<null | "applied" | "investigated" | "ack">(null);
+  const [decisionOpen, setDecisionOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"applied" | "investigated" | "ack">("applied");
+
+  const recommendationText =
+    diag.kind === "actionable-pacing"
+      ? "Reduce WPCID 12346 daily budget to bring pacing back in band."
+      : diag.kind === "actionable-cpl"
+        ? "Add 3 phrase-match negatives to suppress informational queries."
+        : diag.kind === "investigate"
+          ? "Open the LP & tracking screen — checks pre-loaded."
+          : "Acknowledge — campaign is healthy, log a check-in.";
+
+  const requestDecision = (k: "applied" | "investigated" | "ack") => {
+    setPendingAction(k);
+    setDecisionOpen(true);
+  };
+
+  const handleDecision = (
+    result: null | "applied" | "investigated",
+    _meta: any,
+  ) => {
+    setDecisionOpen(false);
+    if (result === "applied") setApplied("applied");
+    else if (result === "investigated") setApplied("investigated");
+    else if (result === null && pendingAction === "ack") setApplied("ack");
+  };
 
   if (!campaign) return null;
 
