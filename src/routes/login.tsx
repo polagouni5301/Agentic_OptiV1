@@ -14,7 +14,9 @@ import {
   Quote,
 } from "lucide-react";
 import { LocaliQLogo, ScoutMark } from "../components/scout/Logo";
-import loginBg from "../assets/scout-login-bg.png";
+
+const LOGIN_BG =
+  "https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?auto=format&fit=crop&w=1600&q=80";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -59,8 +61,9 @@ function LoginPage() {
         {/* LEFT: Editorial branding */}
         <section className="relative hidden h-full overflow-hidden lg:block">
           <img
-            src={loginBg}
+            src={LOGIN_BG}
             alt=""
+            loading="eager"
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div
@@ -89,24 +92,27 @@ function LoginPage() {
                 <Sparkles className="h-3 w-3" /> Agentic intelligence
               </div>
               <h1 className="mt-5 font-display text-[40px] font-semibold leading-[1.02] tracking-tight">
-                Walk in with a question.
+                The forty-minute
                 <br />
-                <span className="text-white/70">Walk out with an answer.</span>
+                investigation
+                <br />
+                <span className="text-white/70">just became thirty-eight seconds.</span>
               </h1>
               <p className="mt-5 text-[14px] leading-relaxed text-white/80">
-                Scout assembles the context, reasons through the anomaly, and brings
-                you a recommendation you can actually ship — all before your next
-                meeting starts.
+                Scout reads every signal in your account the way a senior analyst
+                would — pacing, change history, tracking, creative — then hands
+                you the answer with the evidence attached. You decide what ships.
               </p>
 
               <figure className="mt-7 rounded-2xl border border-white/15 bg-white/[0.08] p-5 backdrop-blur-md">
                 <Quote className="h-4 w-4 text-white/60" />
                 <blockquote className="mt-2 text-[13px] leading-relaxed text-white/90">
-                  "It does in 40 seconds what used to take my team 40 minutes —
-                  and the recommendation is sourced. We've stopped guessing."
+                  "Scout doesn't just flag the problem — it shows me the four
+                  things it checked and the one it didn't. That's the part I
+                  trust. We've stopped guessing as a team."
                 </blockquote>
                 <figcaption className="mt-3 flex items-center gap-2 text-[11px] uppercase tracking-widest text-white/55">
-                  <span className="h-px w-6 bg-white/30" /> Head of Performance · LocaliQ
+                  <span className="h-px w-6 bg-white/30" /> Maya R. · Head of Paid Search, LocaliQ
                 </figcaption>
               </figure>
             </motion.div>
