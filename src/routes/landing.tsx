@@ -528,6 +528,52 @@ function LandingPage() {
         </Shell>
       </header>
 
+      {/* TRUSTED-BY MARQUEE */}
+      <section className="relative overflow-hidden border-b border-border/70 bg-background py-8">
+        <Shell>
+          <div className="flex flex-col items-center gap-5">
+            <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+              Trusted by paid-search teams at
+            </div>
+            <div
+              className="relative w-full overflow-hidden"
+              style={{
+                maskImage:
+                  "linear-gradient(90deg, transparent, black 12%, black 88%, transparent)",
+              }}
+            >
+              <motion.div
+                className="flex w-max items-center gap-14 whitespace-nowrap"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+              >
+                {[...Array(2)].map((_, dup) => (
+                  <div key={dup} className="flex items-center gap-14">
+                    {[
+                      "Northwind",
+                      "Helio Group",
+                      "Vantage Media",
+                      "Mercer & Co",
+                      "Lumen Labs",
+                      "Beacon Digital",
+                      "Halcyon",
+                      "Atlas Partners",
+                    ].map((n) => (
+                      <span
+                        key={`${dup}-${n}`}
+                        className="font-display text-[20px] font-semibold tracking-tight text-foreground/45"
+                      >
+                        {n}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </Shell>
+      </section>
+
       <section className="relative overflow-hidden border-b border-border/70 bg-[linear-gradient(180deg,oklch(0.995_0.008_60)_0%,oklch(0.985_0.01_58)_100%)] pt-4 pb-8 sm:pb-10">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,oklch(0.7_0.16_52/0.08),transparent_36%),radial-gradient(circle_at_10%_0%,oklch(0.78_0.16_42/0.06),transparent_32%)]" />
         <Shell>
@@ -855,6 +901,134 @@ function LandingPage() {
                     </p>
                   </div>
                 </motion.div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      </section>
+
+      {/* TESTIMONIAL */}
+      <section className="relative overflow-hidden border-b border-border/70 bg-[linear-gradient(180deg,oklch(0.99_0.006_58)_0%,oklch(0.97_0.012_60)_100%)] py-16 sm:py-20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-20 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-50 blur-3xl"
+          style={{ background: "radial-gradient(closest-side, oklch(0.78 0.16 42 / 0.25), transparent)" }}
+        />
+        <Shell>
+          <SectionLabel n="07" label="From the field" />
+          <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+            <motion.figure
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="relative"
+            >
+              <span
+                aria-hidden
+                className="absolute -left-2 -top-6 font-display text-[120px] leading-none text-primary/15"
+              >
+                "
+              </span>
+              <blockquote className="relative font-display text-[clamp(1.6rem,2.6vw,2.4rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
+                Scout took the part of the day I dreaded — the 40-minute dig
+                before I could even start the conversation — and gave me back
+                the energy to actually advise my clients.
+              </blockquote>
+              <figcaption className="mt-6 flex items-center gap-4">
+                <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-primary to-[oklch(0.72_0.2_55)] font-display text-[16px] font-semibold text-primary-foreground">
+                  MR
+                </div>
+                <div>
+                  <div className="font-display text-[15px] font-semibold tracking-tight text-foreground">
+                    Maya Rendon
+                  </div>
+                  <div className="text-[12px] text-muted-foreground">
+                    Senior SEM Strategist · Helio Group
+                  </div>
+                </div>
+              </figcaption>
+            </motion.figure>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { v: "11.4s", l: "median diagnosis" },
+                { v: "92%", l: "of recommendations approved" },
+                { v: "6×", l: "more campaigns reviewed weekly" },
+                { v: "0", l: "autonomous account changes" },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-2xl border border-border bg-card/80 p-4"
+                >
+                  <div className="font-display text-[clamp(1.6rem,2.4vw,2rem)] font-semibold leading-none tracking-tighter text-foreground">
+                    {s.v}
+                  </div>
+                  <div className="mt-2 text-[11.5px] leading-snug text-muted-foreground">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Shell>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-b border-border/70 bg-background py-16 sm:py-20">
+        <Shell>
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+            <div>
+              <SectionLabel n="08" label="Questions, answered" />
+              <SectionHeading
+                className="mt-6"
+                title={
+                  <>
+                    What teams ask
+                    <span className="block text-muted-foreground">
+                      before they roll Scout in.
+                    </span>
+                  </>
+                }
+                description="Short, honest answers — no vendor speak."
+              />
+            </div>
+            <div className="divide-y divide-border rounded-2xl border border-border bg-card/80">
+              {[
+                {
+                  q: "Does Scout ever change my campaigns on its own?",
+                  a: "No. Scout proposes, you approve. Every recommendation passes through a human review gate and is logged with the chosen path.",
+                },
+                {
+                  q: "How long does a diagnosis actually take?",
+                  a: "Median is 11.4 seconds end-to-end — evidence assembly, reasoning, validation, and a written recommendation.",
+                },
+                {
+                  q: "What data does Scout need access to?",
+                  a: "Read-only access to your ad-platform metrics, conversion data, and account history. Stored in your BigQuery, scoped by IAM.",
+                },
+                {
+                  q: "Is the reasoning step explainable?",
+                  a: "Yes. Every diagnosis ships with the exact evidence package the model saw, the ranked hypotheses, and the policy checks that ran.",
+                },
+              ].map((item, i) => (
+                <details
+                  key={item.q}
+                  className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
+                  open={i === 0}
+                >
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left">
+                    <span className="font-display text-[15px] font-semibold tracking-tight text-foreground">
+                      {item.q}
+                    </span>
+                    <span className="grid h-7 w-7 place-items-center rounded-full border border-border bg-background text-muted-foreground transition group-open:rotate-45 group-open:border-primary/40 group-open:text-primary">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-3 max-w-[55ch] text-[13px] leading-relaxed text-muted-foreground">
+                    {item.a}
+                  </p>
+                </details>
               ))}
             </div>
           </div>

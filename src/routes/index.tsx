@@ -97,7 +97,28 @@ function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="relative"
         >
+          {/* Decorative backdrop behind greeting */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div
+              className="absolute -left-10 -top-10 h-[280px] w-[280px] rounded-full opacity-60 blur-3xl"
+              style={{ background: "radial-gradient(closest-side, oklch(0.92 0.1 55 / 0.55), transparent)" }}
+            />
+            <div
+              className="absolute right-0 top-6 h-[220px] w-[420px] rounded-full opacity-40 blur-3xl"
+              style={{ background: "radial-gradient(closest-side, oklch(0.78 0.16 42 / 0.4), transparent)" }}
+            />
+            <svg className="absolute left-0 top-0 h-full w-full opacity-[0.07]" aria-hidden>
+              <defs>
+                <pattern id="dotGrid" width="22" height="22" patternUnits="userSpaceOnUse">
+                  <circle cx="1" cy="1" r="1" fill="oklch(0.3 0.05 30)" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#dotGrid)" />
+            </svg>
+          </div>
+
            <div className=" grid grid-cols-1 items-end gap-6 lg:grid-cols-[1.5fr_1fr]">
             <h1 className="font-display text-[clamp(40px,6vw,72px)] font-semibold leading-[0.98] tracking-tight">
               <span className="block text-muted-foreground/70">Good morning,</span>
@@ -121,11 +142,7 @@ function Home() {
                 </svg>
               </span>
             </h1>
-
-          
           </div>
-
-         
         </motion.section>
 
         {/* SEARCH */}
