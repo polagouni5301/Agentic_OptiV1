@@ -528,6 +528,52 @@ function LandingPage() {
         </Shell>
       </header>
 
+      {/* TRUSTED-BY MARQUEE */}
+      <section className="relative overflow-hidden border-b border-border/70 bg-background py-8">
+        <Shell>
+          <div className="flex flex-col items-center gap-5">
+            <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
+              Trusted by paid-search teams at
+            </div>
+            <div
+              className="relative w-full overflow-hidden"
+              style={{
+                maskImage:
+                  "linear-gradient(90deg, transparent, black 12%, black 88%, transparent)",
+              }}
+            >
+              <motion.div
+                className="flex w-max items-center gap-14 whitespace-nowrap"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+              >
+                {[...Array(2)].map((_, dup) => (
+                  <div key={dup} className="flex items-center gap-14">
+                    {[
+                      "Northwind",
+                      "Helio Group",
+                      "Vantage Media",
+                      "Mercer & Co",
+                      "Lumen Labs",
+                      "Beacon Digital",
+                      "Halcyon",
+                      "Atlas Partners",
+                    ].map((n) => (
+                      <span
+                        key={`${dup}-${n}`}
+                        className="font-display text-[20px] font-semibold tracking-tight text-foreground/45"
+                      >
+                        {n}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </Shell>
+      </section>
+
       <section className="relative overflow-hidden border-b border-border/70 bg-[linear-gradient(180deg,oklch(0.995_0.008_60)_0%,oklch(0.985_0.01_58)_100%)] pt-4 pb-8 sm:pb-10">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,oklch(0.7_0.16_52/0.08),transparent_36%),radial-gradient(circle_at_10%_0%,oklch(0.78_0.16_42/0.06),transparent_32%)]" />
         <Shell>
