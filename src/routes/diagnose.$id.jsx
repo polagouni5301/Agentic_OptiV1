@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useParams, notFound } from "@tanstack/react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,20 +18,9 @@ const STEPS = [
 
 const STEP_MS = 900;
 
-export const Route = createFileRoute("/diagnose/$id")({
-  head: ({ params }) => ({
-    meta: [{ title: `Diagnosing ${params.id} — LocaliQ` }],
-  }),
-  component: Diagnosing,
-  loader: ({ params }) => {
-    const c = getCampaign(params.id);
-    if (!c) throw notFound();
-    return c;
-  },
-});
 
-function Diagnosing() {
-  const { id } = useParams({ from: "/diagnose/$id" });
+export default function Diagnosing() {
+  const { id } = useParams();
   const campaign = getCampaign(id);
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -45,7 +34,7 @@ function Diagnosing() {
   useEffect(() => {
     if (step >= STEPS.length) {
       const t = setTimeout(() => {
-        navigate({ to: "/campaign/$id", params: { id } });
+        navigate(`/campaign/${id}`);
       }, 450);
       return () => clearTimeout(t);
     }

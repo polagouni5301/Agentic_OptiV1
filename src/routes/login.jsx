@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import {
@@ -18,30 +18,17 @@ import { LocaliQLogo, ScoutIconMark, ScoutMark } from "../components/scout/Logo"
 const LOGIN_BG =
   "https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?auto=format&fit=crop&w=1600&q=80";
 
-export const Route = createFileRoute("/login")({
-  head: () => ({
-    meta: [
-      { title: "Sign in — Scout · Agentic Campaign Intelligence" },
-      {
-        name: "description",
-        content:
-          "Sign in to Scout — the agentic analyst for paid search teams. Diagnose any campaign in under a minute.",
-      },
-    ],
-  }),
-  component: LoginPage,
-});
 
-function LoginPage() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = (e) => {
     e.preventDefault();
     setError(null);
     if (!email || !password) {
@@ -51,7 +38,7 @@ function LoginPage() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate({ to: "/" });
+      navigate("/");
     }, 800);
   };
 
