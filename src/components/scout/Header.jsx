@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Timer, Activity, CheckCircle2, AlertTriangle, Bell, LogOut } from "lucide-react";
 import { LocaliQLogo } from "./Logo";
 

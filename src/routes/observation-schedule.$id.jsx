@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useParams } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles, Copy } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -21,25 +21,9 @@ const OBSERVATIONS = [
   },
 ];
 
-export const Route = createFileRoute("/observation-schedule/$id")({
-  head: ({ params }) => ({
-    meta: [{ title: `Observation Schedule - ${params.id} - LocaliQ` }],
-  }),
-  loader: ({ params }) => {
-    const campaign = getCampaign(params.id);
-    if (!campaign) throw notFound();
-    return campaign;
-  },
-  component: ObservationSchedulePage,
-  notFoundComponent: () => (
-    <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-      Campaign not found.
-    </div>
-  ),
-});
 
-function ObservationSchedulePage() {
-  const { id } = useParams({ from: "/observation-schedule/$id" });
+export default function ObservationSchedulePage() {
+  const { id } = useParams();
   const campaign = getCampaign(id);
 
   if (!campaign) return null;

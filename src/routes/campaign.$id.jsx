@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useParams } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -51,31 +51,8 @@ export const Route = createFileRoute("/campaign/$id")({
 
 /* ---------------- Per-campaign diagnosis content ---------------- */
 
-type Kind = "healthy" | "actionable-cpl" | "actionable-pacing" | "investigate";
-type Diag = {
-  kind: Kind;
-  label: "ACTIONABLE" | "INFORMATIONAL" | "INVESTIGATE";
-  headline: React.ReactNode;
-  subhead: string;
-  evidence: number;
-  clarity: number;
-  safety: number;
-  safetyLabel: string;
-  lastAction: string;
-  diagnosedIn: string;
-  appliedTitle: string;
-  appliedChange: React.ReactNode;
-  appliedCopy: string;
-  historyTitle?: string;
-  history: Array<{
-    label: string;
-    title: string;
-    sub?: string;
-    ago: string;
-  }>;
-};
 
-const DIAGS: Record<string, Diag> = {
+const DIAGS = {
   "5212017": {
     kind: "healthy",
     label: "INFORMATIONAL",
@@ -254,7 +231,7 @@ const DIAGS: Record<string, Diag> = {
 
 /* ---------------- Page ---------------- */
 
-function Detail() {
+export default function Detail() {
   const { id } = useParams({ from: "/campaign/$id" });
   const campaign = getCampaign(id);
   const diag = DIAGS[id] ?? DIAGS["5212017"];
@@ -273,15 +250,12 @@ function Detail() {
           ? "Open the LP & tracking screen — checks pre-loaded."
           : "Acknowledge — campaign is healthy, log a check-in.";
 
-  const requestDecision = (k: "applied" | "investigated" | "ack") => {
+  const requestDecision = (k) => {
     setPendingAction(k);
     setDecisionOpen(true);
   };
 
-  const handleDecision = (
-    result: null | "applied" | "investigated",
-    _meta: any,
-  ) => {
+  const handleDecision = (result, _meta) => {
     setDecisionOpen(false);
     if (result === "applied") setApplied("applied");
     else if (result === "investigated") setApplied("investigated");
@@ -556,15 +530,7 @@ function Detail() {
 
 /* ---------------- Sub components ---------------- */
 
-function ActionPanel({
-  diag,
-  campaign,
-  onApply,
-}: {
-  diag: Diag;
-  campaign: any;
-  onApply: (k: "applied" | "investigated" | "ack") => void;
-}) {
+function ActionPanel({ diag, campaign, onApply }) {
   const [budget, setBudget] = useState(65);
   const checks = [
     "Landing page form submits — fire a test lead",
@@ -743,17 +709,7 @@ function ActionPanel({
   );
 }
 
-function AppliedScreen({
-  diag,
-  campaign,
-  kind,
-  onReset,
-}: {
-  diag: Diag;
-  campaign: any;
-  kind: "applied" | "investigated" | "ack";
-  onReset: () => void;
-}) {
+function AppliedScreen({ diag, campaign, kind, onReset }) {
   const isInvestigated = kind === "investigated";
   return (
     <motion.section
@@ -904,7 +860,7 @@ function AppliedScreen({
   );
 }
 
-function ReasoningForKind({ diag }: { diag: Diag }) {
+function ReasoningForKind({ diag }) {
   if (diag.kind === "actionable-pacing") {
     return (
       <>
@@ -1037,7 +993,7 @@ function ReasoningForKind({ diag }: { diag: Diag }) {
   );
 }
 
-function EvidenceForKind({ diag }: { diag: Diag }) {
+function EvidenceForKind({ diag }) {
   if (diag.kind === "actionable-pacing") {
     return (
       <div className="mt-5 space-y-5">
@@ -1096,7 +1052,7 @@ function EvidenceForKind({ diag }: { diag: Diag }) {
   );
 }
 
-function whatIChecked(kind: Kind): string[] {
+function whatIChecked(kind) {
   switch (kind) {
     case "actionable-pacing":
       return [
@@ -1134,7 +1090,7 @@ function whatIChecked(kind: Kind): string[] {
       ];
   }
 }
-function whatsMissing(kind: Kind): string {
+function whatsMissing(kind) {
   if (kind === "actionable-pacing") return "No client-context note this invocation";
   if (kind === "actionable-cpl") return "Search-term report sample is 14d — broader window may surface more";
   if (kind === "investigate") return "LP analytics and tag-firing data not in evidence package";
@@ -1143,7 +1099,7 @@ function whatsMissing(kind: Kind): string {
 
 /* ---------------- Atoms ---------------- */
 
-function ConfidenceRow({ label, filled }: { label: string; filled: number }) {
+function ConfidenceRow({ label, filled }) {
   return (
     <div className="flex items-center justify-between gap-3 text-[13px]">
       <span className="text-muted-foreground">{label}</span>
@@ -1165,7 +1121,7 @@ function ConfidenceRow({ label, filled }: { label: string; filled: number }) {
   );
 }
 
-function ReasoningBlock({ title, children }: { title: string; children: React.ReactNode }) {
+function ReasoningBlock({ title, children }) {
   return (
     <div className="mt-6 border-l-2 border-primary/70 pl-5">
       <div className="text-[11px] font-semibold tracking-[0.14em] text-primary">{title}</div>
@@ -1174,7 +1130,7 @@ function ReasoningBlock({ title, children }: { title: string; children: React.Re
   );
 }
 
-function Chips({ chips }: { chips: string[] }) {
+function Chips({ chips }) {
   return (
     <div className="mt-3 flex flex-wrap gap-2">
       {chips.map((c) => (
@@ -1190,7 +1146,7 @@ function Chips({ chips }: { chips: string[] }) {
   );
 }
 
-function MetricTile({ label, value, vs, tone }: { label: string; value: string; vs: string; tone: "ok" | "warn" }) {
+function MetricTile({ label, value, vs, tone }) {
   const bg = tone === "warn" ? "oklch(0.96 0.05 70)" : "oklch(0.96 0.05 55)";
   const border = tone === "warn" ? "oklch(0.85 0.06 70)" : "oklch(0.85 0.08 55)";
   return (
@@ -1202,19 +1158,7 @@ function MetricTile({ label, value, vs, tone }: { label: string; value: string; 
   );
 }
 
-function ChangeItem({
-  label,
-  title,
-  sub,
-  ago,
-  isLast,
-}: {
-  label: string;
-  title: string;
-  sub?: string;
-  ago: string;
-  isLast?: boolean;
-}) {
+function ChangeItem({ label, title, sub, ago, isLast }) {
   return (
     <li className="flex items-start gap-3">
       <div className="relative flex shrink-0 flex-col items-center">
@@ -1238,7 +1182,7 @@ function ChangeItem({
   );
 }
 
-function EvidenceTitle({ label, headline }: { label: string; headline: string }) {
+function EvidenceTitle({ label, headline }) {
   return (
     <div>
       <div className="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground">{label}</div>
@@ -1247,7 +1191,7 @@ function EvidenceTitle({ label, headline }: { label: string; headline: string })
   );
 }
 
-function SparkChart({ kind }: { kind: "pacing" | "cpl-up" | "cvr-down" }) {
+function SparkChart({ kind }) {
   const stroke =
     kind === "cvr-down" ? "oklch(0.48 0.16 245)" : kind === "pacing" ? "oklch(0.48 0.16 245)" : "oklch(0.62 0.2 38)";
   const fill =
@@ -1274,7 +1218,7 @@ function SparkChart({ kind }: { kind: "pacing" | "cpl-up" | "cvr-down" }) {
   );
 }
 
-function PublisherBars({ data }: { data: Array<{ p: string; v: number; share: string; cpl: string; cvr: string; color: string }> }) {
+function PublisherBars({ data }) {
   const total = data.reduce((a, b) => a + b.v, 0);
   return (
     <div className="mt-3">

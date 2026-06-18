@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
+
 import { useRef } from "react";
 import {
   ArrowRight,
@@ -22,29 +22,16 @@ import {
 } from "lucide-react";
 import { ScoutIconMark } from "@/components/scout/Logo";
 
-export const Route = createFileRoute("/landing")({
-  head: () => ({
-    meta: [
-      { title: "Agentic Campaign Intelligence - Diagnose paid search in seconds" },
-      {
-        name: "description",
-        content:
-          "An AI agent for paid search teams. Assemble context, reason about anomalies, validate fixes, and ship with confidence.",
-      },
-    ],
-  }),
-  component: LandingPage,
-});
 
 const heroBackdrop =
   "radial-gradient(120% 90% at 75% 0%, oklch(0.97 0.05 58) 0%, oklch(0.988 0.006 60) 50%, oklch(0.985 0.008 60) 100%)";
 
-const fade: Variants = {
+const fade = {
   hidden: { opacity: 0, y: 22 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -53,11 +40,11 @@ const sectionMotion = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
-function Shell({ children, className = "" }: { children: ReactNode; className?: string }) {
+function Shell({ children, className = "" }) {
   return (
     <div className={`mx-auto w-full max-w-[1240px] px-6 sm:px-8 lg:px-10 ${className}`}>
       {children}
@@ -65,7 +52,7 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
   );
 }
 
-function Eyebrow({ children }: { children: ReactNode }) {
+function Eyebrow({ children }) {
   return (
     <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -74,7 +61,7 @@ function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-function SectionLabel({ n, label }: { n: string; label: string }) {
+function SectionLabel({ n, label }) {
   return (
     <div className="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground">
       <span className="text-primary">{n}</span>
@@ -84,19 +71,7 @@ function SectionLabel({ n, label }: { n: string; label: string }) {
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  description,
-  align = "left",
-  className = "",
-}: {
-  eyebrow?: string;
-  title: ReactNode;
-  description?: ReactNode;
-  align?: "left" | "center";
-  className?: string;
-}) {
+function SectionHeading({ eyebrow, title, description, align = "left", className = "" }) {
   const centered = align === "center";
   return (
     <div className={`${centered ? "mx-auto text-center" : ""} ${className}`}>
@@ -113,7 +88,7 @@ function SectionHeading({
   );
 }
 
-function StatCard({ value, label, detail }: { value: string; label: string; detail: string }) {
+function StatCard({ value, label, detail }) {
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_12px_30px_-24px_oklch(0.2_0.02_260/0.4)]">
       <div className="font-display text-[clamp(2.2rem,5.2vw,4.1rem)] font-semibold leading-none tracking-tighter text-foreground">
@@ -300,15 +275,15 @@ function ArchitectureVisual() {
   );
 }
 
-function LandingPage() {
-  const heroRef = useRef<HTMLDivElement>(null);
+export default function LandingPage() {
+  const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroImgY = useTransform(scrollYProgress, [0, 1], [0, 90]);
-  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.04]);
-  const heroTextY = useTransform(scrollYProgress, [0, 1], [0, -36]);
+
+
+
 
   const pipeline = [
     {

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -22,36 +22,23 @@ import { Header } from "../components/scout/Header";
 import { DiagnoseModal } from "../components/scout/DiagnoseModal";
 import { campaigns as baseCampaigns, outcomes } from "../data/campaigns";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Workspace · Scout" },
-      {
-        name: "description",
-        content:
-          "Your campaign workspace. Pick anything you want a second pair of eyes on — Scout will diagnose it in seconds.",
-      },
-    ],
-  }),
-  component: Home,
-});
 
-const FILTERS = ["All", "Needs a look", "Pacing", "CPL", "Wins"] as const;
-type Filter = (typeof FILTERS)[number];
+const FILTERS = ["All", "Needs a look", "Pacing", "CPL", "Wins"];
 
-function toneOf(c: any): "success" | "warning" | "neutral" {
-  return c.metric.tone as any;
+
+function toneOf(c) {
+  return c.metric.tone;
 }
 
-function Home() {
+export default function Index() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<any>(null);
-  const [filter, setFilter] = useState<Filter>("All");
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [selected, setSelected] = useState(null);
+  const [filter, setFilter] = useState("All");
+  const [view, setView] = useState("grid");
 
-  const openModal = (c: any) => {
+  const openModal = (c) => {
     setSelected(c);
     setOpen(true);
   };
@@ -78,7 +65,7 @@ function Home() {
   const runDiagnosis = () => {
     if (!selected) return;
     setOpen(false);
-    navigate({ to: "/diagnose/$id", params: { id: selected.id } });
+    navigate(`/diagnose/${selected.id}`);
   };
 
   const counts = {
