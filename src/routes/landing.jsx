@@ -282,8 +282,9 @@ export default function LandingPage() {
     offset: ["start start", "end start"],
   });
 
-
-
+  const heroTextY = useTransform(scrollYProgress, [0, 1], [0, -56]);
+  const heroImgY = useTransform(scrollYProgress, [0, 1], [0, 32]);
+  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 0.98]);
 
   const pipeline = [
     {

@@ -1,6 +1,9 @@
+import { getCampaignDetail } from "./campaignDetails.js";
+
 export const campaigns = [
   {
     id: "5212017",
+    detailId: "5212017",
     vertical: "Plumbing",
     name: "Acme Plumbing",
     note: "Hasn't been checked in 11 days — probably fine, easy to confirm.",
@@ -9,6 +12,7 @@ export const campaigns = [
   },
   {
     id: "7720915",
+    detailId: "7720915",
     vertical: "Roofing",
     name: "Acme Roofing Co.",
     note: "Conversion rate stepped down across the board.",
@@ -17,6 +21,7 @@ export const campaigns = [
   },
   {
     id: "3140833",
+    detailId: "3140833",
     vertical: "HVAC",
     name: "Cool-O-Matic",
     note: "Pacing has drifted past 1.20 in the last 48 hours.",
@@ -25,6 +30,7 @@ export const campaigns = [
   },
   {
     id: "4881204",
+    detailId: "4881204",
     vertical: "Plumbing",
     name: "Mountain View Plumbing",
     note: "CPL has been trending up against goal for a week.",
@@ -33,6 +39,7 @@ export const campaigns = [
   },
   {
     id: "6620331",
+    detailId: "6620331",
     vertical: "Dental",
     name: "Bright Smile Dental",
     note: "Brand search is flat — non-brand keywords are losing share.",
@@ -41,6 +48,7 @@ export const campaigns = [
   },
   {
     id: "9013477",
+    detailId: "9013477",
     vertical: "Legal",
     name: "Harbor & Vale Attorneys",
     note: "Strong week — conversions doubled after the LP swap.",
@@ -75,5 +83,11 @@ export const outcomes = [
 ];
 
 export function getCampaign(id) {
-  return campaigns.find((c) => c.id === id);
+  const campaign = campaigns.find((c) => c.id === id || c.detailId === id);
+  if (!campaign) return null;
+
+  return {
+    ...campaign,
+    detail: getCampaignDetail(campaign.detailId ?? campaign.id),
+  };
 }

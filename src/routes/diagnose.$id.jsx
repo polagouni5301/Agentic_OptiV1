@@ -55,7 +55,7 @@ export default function Diagnosing() {
           className="relative grid h-[280px] w-[280px] place-items-center"
         >
           {/* Orbiting halo */}
-          <svg
+          <motion.svg
             aria-hidden
             viewBox="0 0 280 280"
             className="pointer-events-none absolute inset-0 h-full w-full"
@@ -116,7 +116,7 @@ export default function Diagnosing() {
               animate={{ r: [80, 130, 80], opacity: [0.55, 0, 0.55] }}
               transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
             />
-          </svg>
+          </motion.svg>
           <div className="relative">
             <ScoutIconMark size={200} />
           </div>

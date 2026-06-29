@@ -4,7 +4,7 @@ import { ArrowLeft, Sparkles, Copy } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Header } from "../components/scout/Header";
 import { getCampaign } from "../data/campaigns";
-import { ScoutMark } from "@/components/scout/Logo";
+import { ScoutMark } from "../components/scout/Logo";
 
 const OBSERVATIONS = [
   {

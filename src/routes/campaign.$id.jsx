@@ -23,223 +23,17 @@ import { DiagnoseModal } from "../components/scout/DiagnoseModal";
 import { DecisionCapture } from "../components/scout/DecisionCapture";
 import { Button } from "../components/ui/button";
 import { getCampaign } from "../data/campaigns";
-
-export const Route = createFileRoute("/campaign/$id")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Diagnose · ${params.id} — LocaliQ` },
-      { name: "description", content: "Scout diagnosis for this campaign." },
-    ],
-  }),
-  component: Detail,
-  notFoundComponent: () => (
-    <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-      Campaign not found.
-    </div>
-  ),
-  errorComponent: ({ error }) => (
-    <div className="flex min-h-screen items-center justify-center text-muted-foreground">
-      {error.message}
-    </div>
-  ),
-  loader: ({ params }) => {
-    const c = getCampaign(params.id);
-    if (!c) throw notFound();
-    return c;
-  },
-});
-
-/* ---------------- Per-campaign diagnosis content ---------------- */
-
-
-const DIAGS = {
-  "5212017": {
-    kind: "healthy",
-    label: "INFORMATIONAL",
-    headline: (
-      <>
-        Acme Plumbing is healthy.{" "}
-        <span className="text-muted-foreground">One thing worth knowing.</span>
-      </>
-    ),
-    subhead:
-      "Utilization 0.94 (in range), CPL $48 vs $50 goal, CVR 3.8% (in range). KBAS and XBAS have made only routine in-band adjustments — no manual intervention needed in 14 days.",
-    evidence: 5,
-    clarity: 5,
-    safety: 5,
-    safetyLabel: "All sub-bands healthy",
-    lastAction: "11 days ago · KBAS",
-    diagnosedIn: "11.4s",
-    appliedTitle: "Acknowledged.",
-    appliedChange: <>Logged a check-in. Scout will re-scan in 7 days.</>,
-    appliedCopy:
-      "Campaign is pacing well at $48 CPL against a $50 goal. No changes needed this cycle.",
-    history: [
-      { label: "KBAS", title: "Daily budget WPCID 12345", sub: "$38 → $40 · Routine", ago: "3d ago" },
-      { label: "XBAS", title: "Bid strategy refresh", ago: "6d ago" },
-    ],
-  },
-  "7720915": {
-    kind: "investigate",
-    label: "INVESTIGATE",
-    headline: (
-      <>
-        Acme Roofing CVR dropped 45% —{" "}
-        <span className="text-muted-foreground">
-          the signal points downstream.
-        </span>
-      </>
-    ),
-    subhead:
-      "The drop is uniform across keywords and publishers with click volume stable. That pattern almost always means landing page or tracking, not the ad.",
-    evidence: 3,
-    clarity: 4,
-    safety: 1,
-    safetyLabel: "No autonomous action — investigate only",
-    lastAction: "4 days ago · XBAS",
-    diagnosedIn: "11.4s",
-    appliedTitle: "Opening the LP & tracking screen.",
-    appliedChange: (
-      <>This one needs your eyes — there's no direct lever I can pull. I've pre-loaded the checks below so you don't have to start from zero.</>
-    ),
-    appliedCopy:
-      "Investigated landing-page and tracking — checked conversion pixel, form submission, GA4 vs ad-platform parity, and recent LP changes.",
-    history: [
-      { label: "XBAS", title: "Bid strategy refresh", ago: "4d ago" },
-      { label: "You", title: "Added 5 negatives", ago: "12d ago" },
-    ],
-  },
-  "3140833": {
-    kind: "actionable-pacing",
-    label: "ACTIONABLE",
-    headline: (
-      <>
-        Cool-O-Matic is 35% over target{" "}
-        <span className="text-muted-foreground">with 8 days left.</span>
-      </>
-    ),
-    subhead:
-      "Spend is concentrated on WPCID 12346 — the publisher KBAS hasn't touched. At current pace, the campaign spends out 5 days early.",
-    evidence: 5,
-    clarity: 4,
-    safety: 5,
-    safetyLabel: "≤20% budget change per action",
-    lastAction: "2 days ago · KBAS",
-    diagnosedIn: "11.4s",
-    appliedTitle: "Applied. Nice.",
-    appliedChange: (
-      <>
-        <b>WPCID 12346 — Google Search</b> daily budget $75 →{" "}
-        <span className="font-semibold text-primary">$65/day</span>
-      </>
-    ),
-    appliedCopy:
-      "Reduced WPCID 12346 daily budget from $75 to $65 to bring cycle pacing in band. Watching at +1d, +3d, +7d.",
-    historyTitle: "KBAS already tried — but it only touched one publisher.",
-    history: [
-      { label: "KBAS", title: "Daily budget WPCID 12345", sub: "$40 → $33 · Auto-correct", ago: "2d ago" },
-      { label: "You", title: "Added negatives (3 keywords)", ago: "5d ago" },
-      { label: "KBAS", title: "Daily budget WPCID 12346", sub: "$70 → $75 · Auto", ago: "9d ago" },
-    ],
-  },
-  "4881204": {
-    kind: "actionable-cpl",
-    label: "ACTIONABLE",
-    headline: (
-      <>
-        CPL on Mountain View Plumbing is up 35% —{" "}
-        <span className="text-muted-foreground">three keywords are the cause.</span>
-      </>
-    ),
-    subhead:
-      "Click and impression volume are stable. The cost is being absorbed by three broad-match keywords pulling informational queries.",
-    evidence: 4,
-    clarity: 4,
-    safety: 5,
-    safetyLabel: "Negatives are reversible",
-    lastAction: "yesterday · you",
-    diagnosedIn: "11.4s",
-    appliedTitle: "Applied. Nice.",
-    appliedChange: (
-      <>
-        <b>Add 3 phrase-match negatives.</b> I'll watch CPL at +1d, +3d, and +7d
-        to confirm the non-converting spend is gone — and that no good queries
-        got caught.
-      </>
-    ),
-    appliedCopy:
-      "Added phrase-match negatives -\"how to\", -\"cost\", -\"prices\" to suppress informational queries on broad-match terms.",
-    history: [
-      { label: "You", title: "Increased budget", sub: "$160/d → $175/d", ago: "1d ago" },
-      { label: "XBAS", title: "Bid strategy refresh", ago: "7d ago" },
-    ],
-  },
-  // Fallbacks
-  "6620331": {
-    kind: "healthy",
-    label: "INFORMATIONAL",
-    headline: (
-      <>
-        Bright Smile Dental is steady.{" "}
-        <span className="text-muted-foreground">Watch non-brand share.</span>
-      </>
-    ),
-    subhead:
-      "Brand impression share is solid. Non-brand share has slipped from 78% to 61% over 14 days — worth a check-in at the next client call.",
-    evidence: 4,
-    clarity: 4,
-    safety: 5,
-    safetyLabel: "Monitor — no action yet",
-    lastAction: "13 days ago · KBAS",
-    diagnosedIn: "10.8s",
-    appliedTitle: "Acknowledged.",
-    appliedChange: <>Logged for next client conversation. Scout will re-check in 5 days.</>,
-    appliedCopy:
-      "Non-brand impression share down to 61% from 78%. Flagged for client check-in.",
-    history: [
-      { label: "KBAS", title: "Daily budget WPCID 12345", sub: "$38 → $40 · Routine", ago: "3d ago" },
-      { label: "XBAS", title: "Bid strategy refresh", ago: "6d ago" },
-    ],
-  },
-  "9013477": {
-    kind: "healthy",
-    label: "INFORMATIONAL",
-    headline: (
-      <>
-        Harbor & Vale just had its best week.{" "}
-        <span className="text-muted-foreground">Here's what worked.</span>
-      </>
-    ),
-    subhead:
-      "Conversions doubled (21 → 42) over 7 days, paced by the new landing page you shipped last week. CPL down to $28 from $41.",
-    evidence: 5,
-    clarity: 5,
-    safety: 5,
-    safetyLabel: "Keep current bids",
-    lastAction: "2 days ago · you",
-    diagnosedIn: "9.2s",
-    appliedTitle: "Logged the win.",
-    appliedChange: <>Recorded the LP swap as the cause. Pattern will be suggested next time.</>,
-    appliedCopy:
-      "LP swap drove 2× conversions at a 32% lower CPL. Documented as a winning pattern.",
-    history: [
-      { label: "KBAS", title: "Daily budget WPCID 12345", sub: "$38 → $40 · Routine", ago: "3d ago" },
-      { label: "XBAS", title: "Bid strategy refresh", ago: "6d ago" },
-    ],
-  },
-};
-
 /* ---------------- Page ---------------- */
 
 export default function Detail() {
-  const { id } = useParams({ from: "/campaign/$id" });
+  const { id } = useParams();
   const campaign = getCampaign(id);
-  const diag = DIAGS[id] ?? DIAGS["5212017"];
+  const diag = campaign?.detail;
   const [open, setOpen] = useState(false);
   const [evidenceOpen, setEvidenceOpen] = useState(true);
-  const [applied, setApplied] = useState<null | "applied" | "investigated" | "ack">(null);
+  const [applied, setApplied] = useState(null);
   const [decisionOpen, setDecisionOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState<"applied" | "investigated" | "ack">("applied");
+  const [pendingAction, setPendingAction] = useState("applied");
 
   const recommendationText =
     diag.kind === "actionable-pacing"
@@ -262,7 +56,7 @@ export default function Detail() {
     else if (result === null && pendingAction === "ack") setApplied("ack");
   };
 
-  if (!campaign) return null;
+  if (!campaign || !diag) return null;
 
   const isActionable = diag.kind === "actionable-cpl" || diag.kind === "actionable-pacing";
   const isInvestigate = diag.kind === "investigate";
@@ -336,7 +130,10 @@ export default function Detail() {
                     </div>
 
                     <h1 className="mt-4 font-display text-[clamp(28px,4vw,42px)] font-semibold leading-[1.05] tracking-tight">
-                      {diag.headline}
+                      {diag.headline?.title}{" "}
+                      {diag.headline?.subtitle ? (
+                        <span className="text-muted-foreground">{diag.headline.subtitle}</span>
+                      ) : null}
                     </h1>
 
                     <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
@@ -409,7 +206,7 @@ export default function Detail() {
                       WHAT I CHECKED
                     </div>
                     <ul className="mt-3 space-y-2 text-[14px] text-foreground">
-                      {whatIChecked(diag.kind).map((x) => (
+                      {whatIChecked(diag).map((x) => (
                         <li key={x} className="flex items-center gap-2">
                           <Check className="h-4 w-4 text-success" /> {x}
                         </li>
@@ -423,7 +220,7 @@ export default function Detail() {
                     <ul className="mt-3 space-y-2 text-[14px] text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <span className="mt-1 inline-block h-3 w-3 rounded-full border-2 border-dashed border-muted-foreground/40" />
-                        {whatsMissing(diag.kind)}
+                        {whatsMissing(diag)}
                       </li>
                     </ul>
                   </div>
@@ -532,7 +329,8 @@ export default function Detail() {
 
 function ActionPanel({ diag, campaign, onApply }) {
   const [budget, setBudget] = useState(65);
-  const checks = [
+  const action = diag.action;
+  const checks = action?.checks ?? [
     "Landing page form submits — fire a test lead",
     "Conversion tag firing on the thank-you page (GTM preview)",
     "Recent LP changes in the last 14 days (ask the AM)",
@@ -543,13 +341,13 @@ function ActionPanel({ diag, campaign, onApply }) {
     return (
       <div>
         <div className="text-[11px] font-semibold tracking-[0.14em] text-[oklch(0.55_0.18_28)]">
-          INVESTIGATE · NO DIRECT LEVER
+          {action?.title ?? "INVESTIGATE · NO DIRECT LEVER"}
         </div>
         <h3 className="mt-1 font-display text-[22px] font-semibold tracking-tight">
-          Open the evidence pack
+          {action?.heading ?? "Open the evidence pack"}
         </h3>
         <p className="mt-2 max-w-lg text-[14px] text-muted-foreground">
-          Deep-links to the LP + tracking screen with checks pre-loaded.
+          {action?.body ?? "Deep-links to the LP + tracking screen with checks pre-loaded."}
         </p>
 
         <div className="mt-5 rounded-xl border border-border bg-accent/40 p-5">
@@ -570,10 +368,10 @@ function ActionPanel({ diag, campaign, onApply }) {
             onClick={() => onApply("investigated")}
             className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition hover:opacity-95"
           >
-            <ExternalLink className="h-4 w-4" /> Take me there
+            <ExternalLink className="h-4 w-4" /> {action?.buttonLabel ?? "Take me there"}
           </button>
           <button className="cursor-pointer rounded-full px-4 py-2 text-[14px] font-medium text-muted-foreground hover:text-foreground">
-            Not now
+            {action?.buttonSecondaryLabel ?? "Not now"}
           </button>
         </div>
       </div>
@@ -584,12 +382,12 @@ function ActionPanel({ diag, campaign, onApply }) {
     return (
       <div>
         <div className="text-[11px] font-semibold tracking-[0.14em] text-primary">
-          RECOMMENDED ACTION
+          {action?.title ?? "RECOMMENDED ACTION"}
         </div>
         <h3 className="mt-1 font-display text-[22px] font-semibold tracking-tight">
-          Reduce WPCID 12346 daily budget
+          {action?.heading ?? "Reduce WPCID 12346 daily budget"}
         </h3>
-        <p className="mt-1 text-[13px] text-muted-foreground">WPCID 12346 — Google Search</p>
+        <p className="mt-1 text-[13px] text-muted-foreground">{action?.body ?? "WPCID 12346 — Google Search"}</p>
 
         <div className="mt-6 flex items-center justify-between text-[12px] text-muted-foreground">
           <span>$60 <span className="text-success">−20%</span></span>
@@ -605,7 +403,7 @@ function ActionPanel({ diag, campaign, onApply }) {
         />
         <div className="mt-3 flex items-end justify-between">
           <span className="text-[12px] text-muted-foreground">
-            Currently set to: <b className="text-foreground">$75</b> · 20% guardrail · KBAS min/max respected
+            Currently set to: <b className="text-foreground">{action?.currentBudget ?? "$75"}</b> · 20% guardrail · KBAS min/max respected
           </span>
           <span className="font-display text-[28px] font-semibold text-foreground">
             ${budget}
@@ -618,7 +416,7 @@ function ActionPanel({ diag, campaign, onApply }) {
         <div className="mt-5 flex items-start gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-[13px] text-foreground">
           <Zap className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p>
-            <b>If applied:</b> I'll re-check pacing at +1d, +3d, and +7d to confirm the cycle lands in band.
+            <b>If applied:</b> {action?.note ?? "I'll re-check pacing at +1d, +3d, and +7d to confirm the cycle lands in band."}
           </p>
         </div>
 
@@ -627,10 +425,10 @@ function ActionPanel({ diag, campaign, onApply }) {
             onClick={() => onApply("applied")}
             className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition hover:opacity-95"
           >
-            <Check className="h-4 w-4" /> Apply this change
+            <Check className="h-4 w-4" /> {action?.buttonLabel ?? "Apply this change"}
           </button>
           <span className="text-[12.5px] text-muted-foreground">
-            You're tuning the amount above — that's your call.
+            {action?.secondaryText ?? "You're tuning the amount above — that's your call."}
           </span>
         </div>
         <button className="mt-3 cursor-pointer text-[13px] text-muted-foreground hover:text-foreground">Not now</button>
@@ -661,8 +459,7 @@ function ActionPanel({ diag, campaign, onApply }) {
         <div className="mt-5 flex items-start gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-[13px] text-foreground">
           <Zap className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p>
-            <b>If applied:</b> I'll watch CPL at +1d, +3d, and +7d to confirm the
-            non-converting spend is gone — and that no good queries got caught.
+            <b>If applied:</b> {action?.body ?? "I'll watch CPL at +1d, +3d, and +7d to confirm the non-converting spend is gone — and that no good queries got caught."}
           </p>
         </div>
 
@@ -671,7 +468,7 @@ function ActionPanel({ diag, campaign, onApply }) {
             onClick={() => onApply("applied")}
             className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition hover:opacity-95"
           >
-            <Check className="h-4 w-4" /> Add negatives
+            <Check className="h-4 w-4" /> {action?.buttonLabel ?? "Add negatives"}
           </button>
           <button className="cursor-pointer text-[14px] text-muted-foreground hover:text-foreground">
             Not now
@@ -685,21 +482,20 @@ function ActionPanel({ diag, campaign, onApply }) {
   return (
     <div>
       <div className="text-[11px] font-semibold tracking-[0.14em] text-muted-foreground">
-        WHAT YOU CAN DO
+        {action?.title ?? "WHAT YOU CAN DO"}
       </div>
       <h3 className="mt-1 font-display text-[22px] font-semibold tracking-tight">
-        No change needed this cycle
+        {action?.heading ?? "No change needed this cycle"}
       </h3>
       <p className="mt-2 max-w-lg text-[14px] text-muted-foreground">
-        Healthy campaigns don't need touch. Acknowledge to log a check-in and
-        free your attention for the ones that do.
+        {action?.body ?? "Healthy campaigns don't need touch. Acknowledge to log a check-in and free your attention for the ones that do."}
       </p>
       <div className="mt-5 flex items-center gap-3">
         <button
           onClick={() => onApply("ack")}
           className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition hover:opacity-95"
         >
-          <Check className="h-4 w-4" /> Acknowledge
+          <Check className="h-4 w-4" /> {action?.buttonLabel ?? "Acknowledge"}
         </button>
         <Link to="/" className="cursor-pointer text-[14px] text-muted-foreground hover:text-foreground">
           Back to campaigns
@@ -791,7 +587,13 @@ function AppliedScreen({ diag, campaign, kind, onReset }) {
                 What changed
               </div>
               <p className="mt-2 text-[15px] leading-relaxed text-foreground">
-                {diag.appliedChange}
+                {diag.appliedChange?.title}
+                {diag.appliedChange?.subtitle ? (
+                  <>
+                    {" "}
+                    <span className="text-muted-foreground">{diag.appliedChange.subtitle}</span>
+                  </>
+                ) : null}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
                 <span>
@@ -843,7 +645,7 @@ function AppliedScreen({ diag, campaign, kind, onReset }) {
             </a>
           ) : (
             <Button asChild className="h-11 rounded-full px-5 text-[13.5px] font-semibold">
-              <Link to="/observation-schedule/$id" params={{ id: campaign.id }}>
+              <Link to={`/observation-schedule/${campaign.id}`}>
                 See observation schedule <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -861,240 +663,76 @@ function AppliedScreen({ diag, campaign, kind, onReset }) {
 }
 
 function ReasoningForKind({ diag }) {
-  if (diag.kind === "actionable-pacing") {
-    return (
-      <>
-        <ReasoningBlock title="CAMPAIGN STATE">
-          <p>
-            Pacing at <b>1.35</b> with <b>8 days remaining</b> on a $7,000 cycle budget.
-            That's <b>$9,420 spent</b> against a <b>$5,133 to-date target</b>.
-          </p>
-          <Chips chips={["$9,420 actual", "$5,133 expected", "Utilization 1.35"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="WHAT CHANGED">
-          <p>
-            KBAS reduced WPCID 12345 daily budget from <b>$40 → $33</b> two days ago — automation
-            responding to the overspend. But it addressed the smaller publisher.
-          </p>
-          <Chips chips={["KBAS: $40→$33", "2 days ago"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="PUBLISHER DISTRIBUTION">
-          <p>
-            <b>WPCID 12346</b> (Google Search) now accounts for <b>80% of last 7d spend</b> at $75/day —
-            $15 above the daily rate needed to land at cycle target. WPCID 12345 is correctly paced post-adjustment.
-          </p>
-          <Chips chips={["WPCID 12346 · 80% spend", "$75/day budget", "$60/day target"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="PROJECTION">
-          <p>
-            At current daily rate, the campaign spends out around <b>Day 25</b> of a 30-day cycle.
-            That's the kind of overspend that triggers a credit.
-          </p>
-          <Chips chips={["Spend-out: Day 25", "Cycle end: Day 30"]} />
-        </ReasoningBlock>
-      </>
-    );
-  }
-  if (diag.kind === "actionable-cpl") {
-    return (
-      <>
-        <ReasoningBlock title="CAMPAIGN STATE">
-          <p>
-            CPL increased from <b>$42 → $57</b> over the last 7 days vs a <b>$45 goal</b>.
-            Clicks and impressions are flat — this is a conversion-efficiency issue, not a volume one.
-          </p>
-          <Chips chips={["CPL $57 (7d)", "Goal $45", "+35%"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="KEYWORD CONCENTRATION">
-          <p>
-            Three broad-match terms — <i>hvac companies near me</i>, <i>heating system cost</i>,{" "}
-            <i>ac unit prices</i> — consume <b>40% of spend</b> with <b>zero conversions</b> in 14 days.
-          </p>
-          <Chips chips={["3 keywords · 40% spend", "0 conversions · 14d"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="INTERPRETATION">
-          <p>
-            These read as <b>informational queries</b> (research intent), not service intent. Match-type
-            and search-term patterns confirm they're catching upper-funnel traffic.
-          </p>
-          <Chips chips={["Broad match", "Informational intent"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="AUTOMATION ACTIVITY">
-          <p>
-            XBAS refreshed bids 7 days ago — routine on the 3-day schedule, in-band. No structural
-            campaign change explains the CPL move.
-          </p>
-          <Chips chips={["XBAS · routine", "No structural change"]} />
-        </ReasoningBlock>
-      </>
-    );
-  }
-  if (diag.kind === "investigate") {
-    return (
-      <>
-        <ReasoningBlock title="CAMPAIGN STATE">
-          <p>
-            CVR fell from <b>4.2% → 2.3%</b> over 7 days. Clicks and keyword mix are flat —
-            the volume side of the funnel didn't change.
-          </p>
-          <Chips chips={["CVR 2.3% (7d)", "Baseline 4.2%", "−45%"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="DISTRIBUTION">
-          <p>
-            The drop is <b>uniform across all 4 publishers</b> and the <b>top 20 keywords</b>.
-            No segment is concentrated.
-          </p>
-          <Chips chips={["4 publishers · uniform", "Top 20 keywords · uniform"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="AUTOMATION ACTIVITY">
-          <p>
-            XBAS refreshed bids 4 days ago — routine on the 3-day schedule and well in-band.
-            Shouldn't drive a 45% CVR drop. No structural campaign change in 14 days.
-          </p>
-          <Chips chips={["XBAS · routine", "No structural change"]} />
-        </ReasoningBlock>
-        <ReasoningBlock title="INTERPRETATION">
-          <p>
-            Uniform drop with no campaign-side cause is the fingerprint of a <b>downstream change</b> —
-            landing page edit, form regression, or a tracking pixel that's no longer firing.
-            No campaign-side lever applies.
-          </p>
-          <Chips chips={["Downstream signal", "No direct lever"]} />
-        </ReasoningBlock>
-      </>
-    );
-  }
-  // healthy
   return (
     <>
-      <ReasoningBlock title="CAMPAIGN STATE">
-        <p>
-          All headline metrics inside their normal bands. Utilization <b>0.94</b>,
-          CPL <b>$48</b> vs <b>$50</b> goal, CVR <b>3.8%</b>, ROAS in line with the
-          vertical benchmark.
-        </p>
-        <Chips chips={["Util 0.94", "CPL $48 / $50", "CVR 3.8%"]} />
-      </ReasoningBlock>
-      <ReasoningBlock title="AUTOMATION ACTIVITY">
-        <p>
-          <b>KBAS</b> rebalanced WPCID 12345 three days ago — a routine in-band shift on the
-          3-day schedule, within publisher KBAS bounds. <b>No manual intervention needed</b> in 14 days.
-        </p>
-        <Chips chips={["KBAS · routine", "No manual touch · 14d"]} />
-      </ReasoningBlock>
-      <ReasoningBlock title="WORTH MONITORING">
-        <p>
-          <b>CPC</b> trended <b>+12%</b> over the last 14 days. Not actionable today,
-          but worth flagging for the next client check-in.
-        </p>
-        <Chips chips={["CPC +12% · 14d"]} />
-      </ReasoningBlock>
+      {(diag.reasoning ?? []).map((item) => (
+        <ReasoningBlock key={item.title} title={item.title}>
+          <div>{item.body}</div>
+          {item.chips && <Chips chips={item.chips} />}
+        </ReasoningBlock>
+      ))}
     </>
   );
 }
 
 function EvidenceForKind({ diag }) {
-  if (diag.kind === "actionable-pacing") {
-    return (
-      <div className="mt-5 space-y-5">
-        <EvidenceTitle label="PACING UTILIZATION · CYCLE TO DATE" headline="You'll spend out 5 days early at this rate." />
-        <SparkChart kind="pacing" />
-        <div className="border-t border-border pt-4">
-          <EvidenceTitle label="PUBLISHER DISTRIBUTION · LAST 7 DAYS" headline="80% of spend on a single publisher." />
-          <PublisherBars data={[
-            { p: "WPCID 12346", v: 5712, share: "80%", cpl: "$51", cvr: "3.4%", color: "oklch(0.62 0.2 38)" },
-            { p: "WPCID 12345", v: 1141, share: "16%", cpl: "$48", cvr: "3.8%", color: "oklch(0.48 0.16 245)" },
-            { p: "Other (3)", v: 285, share: "4%", cpl: "$62", cvr: "2.9%", color: "oklch(0.7 0.02 260)" },
-          ]} />
-        </div>
-      </div>
-    );
-  }
-  if (diag.kind === "actionable-cpl") {
-    return (
-      <div className="mt-5 space-y-5">
-        <EvidenceTitle label="CPL · LAST 14 DAYS" headline="$42 → $57 against a $45 goal." />
-        <SparkChart kind="cpl-up" />
-        <div className="border-t border-border pt-4">
-          <EvidenceTitle label="TOP KEYWORDS BY 7-DAY SPEND" headline="Three of the top five drove zero conversions." />
-          <KeywordTable />
-        </div>
-      </div>
-    );
-  }
-  if (diag.kind === "investigate") {
-    return (
-      <div className="mt-5 space-y-5">
-        <EvidenceTitle label="PUBLISHER DISTRIBUTION · LAST 7 DAYS" headline="Drop is uniform across all publishers." />
-        <PublisherBars data={[
-          { p: "WPCID 12346", v: 1812, share: "43%", cpl: "$74", cvr: "2.4%", color: "oklch(0.48 0.16 245)" },
-          { p: "WPCID 12345", v: 1140, share: "27%", cpl: "$69", cvr: "2.2%", color: "oklch(0.62 0.2 200)" },
-          { p: "WPCID 12347", v: 850, share: "20%", cpl: "$71", cvr: "2.3%", color: "oklch(0.78 0.16 80)" },
-          { p: "WPCID 12348", v: 430, share: "10%", cpl: "$78", cvr: "2.1%", color: "oklch(0.62 0.2 38)" },
-        ]} />
-        <div className="border-t border-border pt-4">
-          <EvidenceTitle label="CVR · LAST 14 DAYS" headline="4.2% → 2.3% — uniform across segments." />
-          <SparkChart kind="cvr-down" />
-        </div>
-      </div>
-    );
-  }
   return (
-    <div className="mt-5">
-      <EvidenceTitle label="HEALTH SNAPSHOT" headline="All metrics inside their normal bands." />
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <MetricTile label="UTILIZATION" value="0.94" vs="vs 1.00" tone="ok" />
-        <MetricTile label="CPL (7D)" value="$48" vs="vs $50" tone="ok" />
-        <MetricTile label="CVR (7D)" value="3.8%" vs="vs 3.5%+" tone="ok" />
-        <MetricTile label="CPC TREND" value="+12%" vs="vs flat" tone="warn" />
-      </div>
+    <div className="mt-5 space-y-5">
+      {(diag.evidenceSections ?? []).map((section) => {
+        if (section.type === "spark-chart") {
+          return (
+            <div key={section.label}>
+              <EvidenceTitle label={section.label} headline={section.headline} />
+              <SparkChart kind={section.chartKind} />
+            </div>
+          );
+        }
+
+        if (section.type === "publisher-bars") {
+          return (
+            <div key={section.label}>
+              <EvidenceTitle label={section.label} headline={section.headline} />
+              <PublisherBars data={section.data} />
+            </div>
+          );
+        }
+
+        if (section.type === "keyword-table") {
+          return (
+            <div key={section.label}>
+              <EvidenceTitle label={section.label} headline={section.headline} />
+              <KeywordTable rows={section.data} />
+            </div>
+          );
+        }
+
+        return (
+          <div key={section.label}>
+            <EvidenceTitle label={section.label} headline={section.headline} />
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {(section.metrics ?? []).map((metric) => (
+                <MetricTile key={metric.label} label={metric.label} value={metric.value} vs={metric.vs} tone={metric.tone} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function whatIChecked(kind) {
-  switch (kind) {
-    case "actionable-pacing":
-      return [
-        "Utilization vs cycle target",
-        "CPL vs goal & 28-day baseline",
-        "Publisher distribution (4 publishers)",
-        "Change history (last 14 days)",
-        "KBAS / XBAS state",
-        "Smart Bidding constraint",
-      ];
-    case "actionable-cpl":
-      return [
-        "CPL trend (28d)",
-        "Keyword cost concentration",
-        "Match-type breakdown",
-        "Quality Score",
-        "Search-term sample (top 50)",
-        "Conversion attribution coverage",
-      ];
-    case "investigate":
-      return [
-        "CVR by keyword (top 20)",
-        "CVR by publisher",
-        "Click + impression trend",
-        "Change log (14d)",
-        "KBAS / XBAS state",
-      ];
-    default:
-      return [
-        "Utilization vs cycle target",
-        "CPL vs goal and 28d baseline",
-        "Publisher distribution",
-        "Change history",
-        "Keyword-level performance",
-      ];
-  }
+function whatIChecked(diag) {
+  return diag.whatIChecked ?? [
+    "Utilization vs cycle target",
+    "CPL vs goal and 28d baseline",
+    "Publisher distribution",
+    "Change history",
+    "Keyword-level performance",
+  ];
 }
-function whatsMissing(kind) {
-  if (kind === "actionable-pacing") return "No client-context note this invocation";
-  if (kind === "actionable-cpl") return "Search-term report sample is 14d — broader window may surface more";
-  if (kind === "investigate") return "LP analytics and tag-firing data not in evidence package";
-  return "No client-context notes provided";
+
+function whatsMissing(diag) {
+  return diag.whatsMissing ?? "No client-context notes provided";
 }
 
 /* ---------------- Atoms ---------------- */
@@ -1250,8 +888,8 @@ function PublisherBars({ data }) {
   );
 }
 
-function KeywordTable() {
-  const rows = [
+function KeywordTable({ rows = [] }) {
+  const data = rows.length ? rows : [
     { kw: "hvac companies near me", match: "BROAD", spend: "$412", conv: "0", cpl: "—", bad: true },
     { kw: "heating system cost", match: "BROAD", spend: "$298", conv: "0", cpl: "—", bad: true },
     { kw: "ac unit prices", match: "BROAD", spend: "$241", conv: "0", cpl: "—", bad: true },
@@ -1267,7 +905,7 @@ function KeywordTable() {
         <span className="text-right">Conv</span>
         <span className="text-right">CPL</span>
       </div>
-      {rows.map((r) => (
+      {data.map((r) => (
         <div
           key={r.kw}
           className={`grid cursor-pointer grid-cols-[1.6fr_auto_auto_auto_auto] gap-x-3 border-b border-border py-2.5 text-[13px] transition-colors hover:bg-muted last:border-b-0 ${
