@@ -320,6 +320,7 @@ export default function Detail() {
         title="Capture your decision"
         recommendation={recommendationText}
         campaignName={campaign.name}
+        campaignId={campaign.id}
       />
     </div>
   );

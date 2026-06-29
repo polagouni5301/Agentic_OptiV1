@@ -1,13 +1,41 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Sliders, Search, X, Flag, ArrowRight } from "lucide-react";
+import { Check, Sliders, Search, X, Flag, ArrowRight, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDecisionCapture } from "../../hooks/useDecisionCapture";
+
+type DecisionResult = "applied" | "investigated" | null;
+
+type DecisionMeta = {
+  kind: string;
+  note?: string;
+  reason?: string;
+};
+
+type DecisionCaptureProps = {
+  open: boolean;
+  onClose: () => void;
+  onDecision?: (result: DecisionResult, meta: DecisionMeta) => void;
+  title?: string;
+  recommendation?: string;
+  campaignName?: string;
+  campaignId?: string;
+};
+
+type Stage = "choose" | "adjust" | "flag";
+
+type OptionTone = "primary" | "warm" | "info" | "danger" | "muted";
+
+type OptionItem = {
+  key: string;
+  label: string;
+  desc: string;
+  icon: LucideIcon;
+  tone: OptionTone;
+};
 
 /**
  * DecisionCapture
  * A modal that captures the user's decision on a recommended action.
- * Options: Use, Adjust, Investigate, Dismiss, Flag issue.
- * Use/Adjust => onApply("applied"); Investigate => onApply("investigated");
- * Dismiss & Flag close the modal with optional logging callbacks.
  */
 export function DecisionCapture({
   open,
@@ -16,10 +44,12 @@ export function DecisionCapture({
   title = "Capture your decision",
   recommendation = "",
   campaignName = "",
-}) {
-  const [stage, setStage] = useState("choose"); // choose | adjust | flag
+  campaignId = "",
+}: DecisionCaptureProps) {
+  const [stage, setStage] = useState<Stage>("choose");
   const [note, setNote] = useState("");
   const [reason, setReason] = useState("Not enough evidence");
+  const { submitCapture } = useDecisionCapture();
 
   useEffect(() => {
     if (open) {
@@ -29,7 +59,7 @@ export function DecisionCapture({
     }
   }, [open]);
 
-  const options = [
+  const options: OptionItem[] = [
     {
       key: "use",
       label: "Use",
@@ -67,12 +97,30 @@ export function DecisionCapture({
     },
   ];
 
-  const handle = (key) => {
-    if (key === "use") onDecision("applied", { kind: "use", note });
-    else if (key === "adjust") setStage("adjust");
-    else if (key === "investigate") onDecision("investigated", { kind: "investigate" });
-    else if (key === "dismiss") onDecision(null, { kind: "dismiss" });
-    else if (key === "flag") setStage("flag");
+  const persistDecision = async (result: DecisionResult, meta: DecisionMeta) => {
+    await submitCapture({
+      campaignId,
+      campaignName,
+      recommendation,
+      result,
+      meta,
+    });
+
+    onDecision?.(result, meta);
+  };
+
+  const handle = async (key: string) => {
+    if (key === "use") {
+      await persistDecision("applied", { kind: "use", note });
+    } else if (key === "adjust") {
+      setStage("adjust");
+    } else if (key === "investigate") {
+      await persistDecision("investigated", { kind: "investigate" });
+    } else if (key === "dismiss") {
+      await persistDecision(null, { kind: "dismiss" });
+    } else if (key === "flag") {
+      setStage("flag");
+    }
   };
 
   return (
@@ -112,17 +160,13 @@ export function DecisionCapture({
                   </h3>
                   {recommendation && (
                     <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                      <span className="font-semibold text-foreground">
-                        Scout suggests:
-                      </span>{" "}
+                      <span className="font-semibold text-foreground">Scout suggests:</span>{" "}
                       {recommendation}
                       {campaignName ? (
                         <>
                           {" "}
                           on{" "}
-                          <span className="font-semibold text-foreground">
-                            {campaignName}
-                          </span>
+                          <span className="font-semibold text-foreground">{campaignName}</span>
                         </>
                       ) : null}
                       .
@@ -143,7 +187,7 @@ export function DecisionCapture({
                   {options.map((o) => (
                     <button
                       key={o.key}
-                      onClick={() => handle(o.key)}
+                      onClick={() => void handle(o.key)}
                       className="group flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-border bg-background/60 px-4 py-3 text-left transition hover:-translate-y-[1px] hover:border-primary/40 hover:bg-card"
                     >
                       <div className="flex items-center gap-3">
@@ -199,7 +243,7 @@ export function DecisionCapture({
                       Back
                     </button>
                     <button
-                      onClick={() => onDecision("applied", { kind: "adjust", note })}
+                      onClick={() => void persistDecision("applied", { kind: "adjust", note })}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition hover:opacity-95"
                     >
                       <Check className="h-4 w-4" /> Apply adjusted
@@ -250,7 +294,7 @@ export function DecisionCapture({
                       Back
                     </button>
                     <button
-                      onClick={() => onDecision(null, { kind: "flag", reason, note })}
+                      onClick={() => void persistDecision(null, { kind: "flag", reason, note })}
                       className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-[13px] font-semibold text-background transition hover:opacity-90"
                     >
                       <Flag className="h-4 w-4" /> Send to Scout
