@@ -12,22 +12,33 @@ export interface DecisionCaptureRecord {
 }
 
 const storageKey = "scout-decision-captures";
+const decisionCaptureStore: DecisionCaptureRecord[] = [];
 
 function readRecords(): DecisionCaptureRecord[] {
+  if (decisionCaptureStore.length > 0) {
+    return [...decisionCaptureStore];
+  }
+
   if (typeof window === "undefined") return [];
 
   try {
     const raw = window.localStorage.getItem(storageKey);
-    return raw ? (JSON.parse(raw) as DecisionCaptureRecord[]) : [];
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw) as DecisionCaptureRecord[];
+    decisionCaptureStore.splice(0, decisionCaptureStore.length, ...parsed);
+    return [...parsed];
   } catch {
     return [];
   }
 }
 
 function writeRecords(records: DecisionCaptureRecord[]) {
-  if (typeof window === "undefined") return;
+  decisionCaptureStore.splice(0, decisionCaptureStore.length, ...records);
 
-  window.localStorage.setItem(storageKey, JSON.stringify(records));
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(storageKey, JSON.stringify(records));
+  }
 }
 
 export function getDecisionCaptureRecords(campaignId?: string): DecisionCaptureRecord[] {
@@ -45,6 +56,9 @@ export function saveDecisionCaptureRecord(record: DecisionCaptureRecord) {
 }
 
 export function clearDecisionCaptureRecords() {
-  if (typeof window === "undefined") return;
-  window.localStorage.removeItem(storageKey);
+  decisionCaptureStore.splice(0, decisionCaptureStore.length);
+
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem(storageKey);
+  }
 }

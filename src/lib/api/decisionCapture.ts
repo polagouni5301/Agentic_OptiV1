@@ -15,38 +15,41 @@ export interface DecisionCaptureResponse {
   ok: boolean;
   storedLocally?: boolean;
   message?: string;
-  data?: Record<string, unknown>;
+  data?: unknown;
+}
+
+const storageKey = "scout-decision-captures";
+
+function readStoredCaptures(): DecisionCapturePayload[] {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    return raw ? (JSON.parse(raw) as DecisionCapturePayload[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeStoredCaptures(records: DecisionCapturePayload[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(storageKey, JSON.stringify(records));
 }
 
 export async function submitDecisionCapture(payload: DecisionCapturePayload): Promise<DecisionCaptureResponse> {
-  const endpoint = "/api/decision-capture";
+  const record: DecisionCapturePayload = {
+    ...payload,
+    createdAt: payload.createdAt ?? new Date().toISOString(),
+  };
 
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+  const existing = readStoredCaptures();
+  const next = [record, ...existing].slice(0, 200);
+  writeStoredCaptures(next);
 
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json().catch(() => ({}));
-
-    return {
-      ok: true,
-      data,
-      message: "Decision capture submitted successfully.",
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      storedLocally: true,
-      message:
-        error instanceof Error ? error.message : "Unable to submit decision capture right now.",
-    };
-  }
+  return {
+    ok: true,
+    storedLocally: true,
+    message: "Decision capture saved locally.",
+    data: next,
+  };
 }
