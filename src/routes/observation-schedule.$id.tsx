@@ -1,12 +1,16 @@
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Sparkles, Copy } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { Header } from "../components/scout/Header";
 import { getCampaign } from "../data/campaigns";
 import { ScoutMark } from "../components/scout/Logo";
 
-const OBSERVATIONS = [
+type ObservationItem = {
+  offset: string;
+  text: string;
+};
+
+const OBSERVATIONS: ObservationItem[] = [
   {
     offset: "+1 DAY",
     text: "Confirm spend rate has dropped below 1.20 utilization.",
@@ -23,7 +27,7 @@ const OBSERVATIONS = [
 
 
 export default function ObservationSchedulePage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const campaign = getCampaign(id);
 
   if (!campaign) return null;
